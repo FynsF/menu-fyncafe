@@ -1017,7 +1017,7 @@
           let message = "☕*Halo FYN Coffee!* %0A%0A";
           message += "Saya ingin memesan:%0A";
           cart.forEach((item) => {
-            message += `=> ${item.name} x${item.qty}%0A`;
+            message += `➤ ${item.name} x${item.qty}%0A`;
           });
           const totalText = drawerTotal.textContent.replace("Rp ", "");
           message += `%0A💰 *Total: Rp ${totalText}*`;
