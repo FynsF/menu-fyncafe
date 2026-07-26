@@ -51,6 +51,12 @@
         border-radius: 10px;
       }
 
+      /* Focus styles untuk aksesibilitas */
+      :focus-visible {
+        outline: 2px solid #d4af37;
+        outline-offset: 2px;
+      }
+
       /* ========== NAVBAR ========== */
       .navbar {
         position: sticky;
@@ -118,6 +124,7 @@
         display: none;
         font-size: 22px;
         color: #d4af37;
+        position: absolute;
       }
       .logo-img.error ~ .logo-fallback,
       .logo-img[src=""].error ~ .logo-fallback,
@@ -332,6 +339,7 @@
         position: relative;
         height: 180px;
         overflow: hidden;
+        background: #1a1410;
       }
       .card-img img {
         width: 100%;
@@ -341,6 +349,22 @@
       }
       .card:hover .card-img img {
         transform: scale(1.06);
+      }
+      .card-img .img-placeholder {
+        display: none;
+        width: 100%;
+        height: 100%;
+        background: #2b231e;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #6b5e52;
+      }
+      .card-img img.error ~ .img-placeholder {
+        display: flex;
+      }
+      .card-img img.error {
+        display: none;
       }
       .card-img .icon-badge {
         position: absolute;
@@ -407,6 +431,22 @@
       }
       .btn-add:active {
         transform: scale(0.96);
+      }
+      .btn-add.added {
+        background: #d4af37;
+        color: #0b0908;
+        animation: popIn 0.3s ease;
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
       }
 
       /* ========== FOOTER ========== */
@@ -511,6 +551,17 @@
         padding: 14px 0;
         border-bottom: 1px solid #2b231e;
         gap: 10px;
+        animation: slideIn 0.3s ease;
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
       .item-detail {
         flex: 1;
@@ -704,18 +755,21 @@
   </head>
   <body>
     <!-- ==================== NAVBAR ==================== -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Navigasi utama">
       <!-- LOGO BRAND DENGAN GAMBAR -->
-      <a href="#" class="nav-logo" aria-label="FYN Coffee Home">
+      <a href="#" class="nav-logo" aria-label="FYN Coffee - Kembali ke beranda">
         <div class="logo-img-wrapper">
           <img
             src="Logo Primary Mentahan (HD).jpg"
             alt="FYN Coffee Logo"
             class="logo-img"
-            onerror="this.classList.add('error')"
+            onerror="
+              this.classList.add('error');
+              this.removeAttribute('srcset');
+            "
             loading="eager"
           />
-          <i class="fas fa-mug-hot logo-fallback"></i>
+          <i class="fas fa-mug-hot logo-fallback" aria-hidden="true"></i>
         </div>
         <div>
           <span class="logo-text">FYN</span>
@@ -723,9 +777,14 @@
         </div>
       </a>
 
-      <button class="nav-cart-btn" id="navCartBtn" aria-label="Buka keranjang">
-        <i class="fas fa-shopping-bag"></i>
-        <span id="cartCount">0</span>
+      <button
+        class="nav-cart-btn"
+        id="navCartBtn"
+        aria-label="Buka keranjang belanja"
+        aria-haspopup="dialog"
+      >
+        <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+        <span id="cartCount" aria-live="polite">0</span>
         <span class="cart-label">Keranjang</span>
       </button>
     </nav>
@@ -736,17 +795,18 @@
         <h1>FYN</h1>
         <p class="tagline">Premium Coffee Experience</p>
         <div class="badge-premium">
-          <i class="fas fa-star"></i> Kopi Berkualitas • Setiap Hari
+          <i class="fas fa-star" aria-hidden="true"></i> Kopi Berkualitas •
+          Setiap Hari
         </div>
       </div>
     </header>
 
     <!-- ==================== KONTEN UTAMA ==================== -->
-    <main class="container">
+    <main class="container" id="mainContent">
       <h2 class="section-title">
-        <i class="fas fa-coffee"></i> Menu Signature
+        <i class="fas fa-coffee" aria-hidden="true"></i> Menu Signature
       </h2>
-      <div class="menu-grid" id="menuGrid">
+      <div class="menu-grid" id="menuGrid" role="list">
         <!-- Dirender oleh JavaScript -->
       </div>
     </main>
@@ -755,24 +815,34 @@
     <footer class="footer">
       <span>FYN Coffee</span> © 2026 • Premium Coffee Experience <br />
       <small>
-        Dibuat dengan <i class="fas fa-heart" style="color: #d4af37"></i> untuk
-        pencinta kopi
+        Dibuat dengan
+        <i class="fas fa-heart" style="color: #d4af37" aria-hidden="true"></i>
+        untuk pencinta kopi
       </small>
     </footer>
 
     <!-- ==================== OVERLAY ==================== -->
-    <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
 
     <!-- ==================== CART DRAWER ==================== -->
-    <div class="cart-drawer" id="cartDrawer">
+    <div
+      class="cart-drawer"
+      id="cartDrawer"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cartTitle"
+      aria-hidden="true"
+    >
       <div class="drawer-header">
-        <h2><i class="fas fa-shopping-cart"></i> Keranjang</h2>
+        <h2 id="cartTitle">
+          <i class="fas fa-shopping-cart" aria-hidden="true"></i> Keranjang
+        </h2>
         <button
           class="drawer-close"
           id="drawerClose"
           aria-label="Tutup keranjang"
         >
-          <i class="fas fa-times"></i>
+          <i class="fas fa-times" aria-hidden="true"></i>
         </button>
       </div>
       <div class="drawer-body" id="drawerBody">
@@ -780,6 +850,7 @@
           <i
             class="far fa-coffee-bean"
             style="font-size: 2rem; display: block; margin-bottom: 10px"
+            aria-hidden="true"
           ></i>
           Keranjang masih kosong.<br />Tambahkan kopi pilihanmu.
         </div>
@@ -789,28 +860,38 @@
           id="noteInput"
           class="note-input"
           placeholder="✨ Catatan pesanan (contoh: less sugar, extra shot)"
+          aria-label="Catatan pesanan"
+          maxlength="500"
         ></textarea>
         <div class="total-row">
           <span>Total</span>
           <span id="drawerTotal">Rp 0</span>
         </div>
         <button class="btn-wa" id="btnWhatsApp">
-          <i class="fab fa-whatsapp"></i> Pesan via WhatsApp
+          <i class="fab fa-whatsapp" aria-hidden="true"></i> Pesan via WhatsApp
         </button>
         <button class="btn-clear" id="btnClearCart">
-          <i class="far fa-trash-alt"></i> Kosongkan Keranjang
+          <i class="far fa-trash-alt" aria-hidden="true"></i> Kosongkan
+          Keranjang
         </button>
       </div>
     </div>
 
     <!-- ==================== FAB MOBILE ==================== -->
-    <button class="fab-cart" id="fabCart" aria-label="Keranjang">
-      <i class="fas fa-shopping-bag"></i>
-      <span class="badge" id="fabBadge">0</span>
+    <button
+      class="fab-cart"
+      id="fabCart"
+      aria-label="Keranjang belanja"
+      aria-haspopup="dialog"
+    >
+      <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+      <span class="badge" id="fabBadge" aria-live="polite">0</span>
     </button>
 
     <script>
       (function () {
+        "use strict";
+
         // ========== DATA MENU ==========
         const menuItems = [
           {
@@ -831,8 +912,39 @@
           },
         ];
 
+        // ========== UTILITY FUNCTIONS ==========
+        function safeLocalStorage(key, value = null) {
+          try {
+            if (value === null) {
+              return JSON.parse(localStorage.getItem(key));
+            }
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+          } catch (e) {
+            console.warn("localStorage error:", e.message);
+            return value === null ? null : false;
+          }
+        }
+
+        function debounce(func, wait) {
+          let timeout;
+          return function executedFunction(...args) {
+            const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+          };
+        }
+
+        function formatRupiah(amount) {
+          return `Rp ${amount.toLocaleString("id-ID")}`;
+        }
+
         // ========== STATE ==========
-        let cart = JSON.parse(localStorage.getItem("fynCartDrawer")) || [];
+        let cart = safeLocalStorage("fynCartDrawer") || [];
+        if (!Array.isArray(cart)) cart = [];
 
         // ========== DOM ELEMENTS ==========
         const menuGrid = document.getElementById("menuGrid");
@@ -850,34 +962,54 @@
         const btnClearCart = document.getElementById("btnClearCart");
 
         function saveCart() {
-          localStorage.setItem("fynCartDrawer", JSON.stringify(cart));
+          safeLocalStorage("fynCartDrawer", cart);
         }
 
         function updateBadges() {
           const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
           cartCountSpan.textContent = totalItems;
           fabBadge.textContent = totalItems;
-          cartCountSpan.style.transform = "scale(1.3)";
-          fabBadge.style.transform = "scale(1.3)";
-          setTimeout(() => {
-            cartCountSpan.style.transform = "scale(1)";
-            fabBadge.style.transform = "scale(1)";
-          }, 150);
+
+          // Animasi badge
+          [cartCountSpan, fabBadge].forEach((el) => {
+            el.style.transform = "scale(1.3)";
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                el.style.transform = "scale(1)";
+              }, 150);
+            });
+          });
+        }
+
+        function updateDrawerAccessibility() {
+          const isOpen = cartDrawer.classList.contains("open");
+          cartDrawer.setAttribute("aria-hidden", !isOpen);
+          overlay.setAttribute("aria-hidden", !isOpen);
+          if (isOpen) {
+            cartDrawer.querySelector(".drawer-close")?.focus();
+          }
         }
 
         function openDrawer() {
           cartDrawer.classList.add("open");
           overlay.classList.add("active");
           document.body.style.overflow = "hidden";
+          updateDrawerAccessibility();
         }
 
         function closeDrawer() {
           cartDrawer.classList.remove("open");
           overlay.classList.remove("active");
           document.body.style.overflow = "";
+          updateDrawerAccessibility();
         }
 
         function addToCart(id, name, price) {
+          if (!id || !name || !price) {
+            console.error("Data menu tidak valid");
+            return;
+          }
+
           const existing = cart.find((item) => item.id === id);
           if (existing) {
             existing.qty += 1;
@@ -888,13 +1020,24 @@
           renderDrawer();
           updateBadges();
           openDrawer();
+
+          // Animasi feedback pada tombol
+          const addedBtn = document.querySelector(`[data-id="${id}"]`);
+          if (addedBtn) {
+            addedBtn.classList.add("added");
+            setTimeout(() => addedBtn.classList.remove("added"), 300);
+          }
         }
 
         function changeQty(index, delta) {
           if (index < 0 || index >= cart.length) return;
           cart[index].qty += delta;
           if (cart[index].qty <= 0) {
-            cart.splice(index, 1);
+            if (confirm(`Hapus ${cart[index].name} dari keranjang?`)) {
+              cart.splice(index, 1);
+            } else {
+              cart[index].qty = 1;
+            }
           }
           saveCart();
           renderDrawer();
@@ -903,10 +1046,13 @@
 
         function removeItem(index) {
           if (index >= 0 && index < cart.length) {
-            cart.splice(index, 1);
-            saveCart();
-            renderDrawer();
-            updateBadges();
+            const itemName = cart[index].name;
+            if (confirm(`Hapus ${itemName} dari keranjang?`)) {
+              cart.splice(index, 1);
+              saveCart();
+              renderDrawer();
+              updateBadges();
+            }
           }
         }
 
@@ -921,20 +1067,36 @@
         }
 
         function renderMenu() {
+          if (!menuGrid) return;
+
+          if (!menuItems || menuItems.length === 0) {
+            menuGrid.innerHTML =
+              '<p style="text-align:center; color:#7a6e60;">Menu sedang tidak tersedia</p>';
+            return;
+          }
+
           menuGrid.innerHTML = menuItems
             .map(
               (item) => `
-          <div class="card">
+          <div class="card" role="listitem">
             <div class="card-img">
-              <img src="${item.image}" alt="${item.name}" loading="lazy" />
-              <div class="icon-badge"><i class="fas fa-mug-hot"></i></div>
+              <img 
+                src="${item.image}" 
+                alt="${item.name}" 
+                loading="lazy"
+                onerror="this.classList.add('error'); this.nextElementSibling.style.display='flex';"
+              />
+              <div class="img-placeholder">
+                <i class="fas fa-coffee"></i>
+              </div>
+              <div class="icon-badge"><i class="fas fa-mug-hot" aria-hidden="true"></i></div>
             </div>
             <div class="card-content">
               <div class="menu-name">${item.icon} ${item.name}</div>
               <div class="menu-desc">${item.desc}</div>
-              <div class="menu-price">Rp ${item.price.toLocaleString("id-ID")}</div>
+              <div class="menu-price">${formatRupiah(item.price)}</div>
               <button class="btn-add" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">
-                <i class="fas fa-plus-circle"></i> Tambah
+                <i class="fas fa-plus-circle" aria-hidden="true"></i> Tambah
               </button>
             </div>
           </div>
@@ -942,7 +1104,7 @@
             )
             .join("");
 
-          document.querySelectorAll(".btn-add").forEach((btn) => {
+          menuGrid.querySelectorAll(".btn-add").forEach((btn) => {
             btn.addEventListener("click", function () {
               const id = this.dataset.id;
               const name = this.dataset.name;
@@ -953,13 +1115,15 @@
         }
 
         function renderDrawer() {
+          if (!drawerBody || !drawerTotal) return;
+
           if (cart.length === 0) {
             drawerBody.innerHTML = `
             <div class="empty-cart-msg">
-              <i class="far fa-coffee-bean" style="font-size:2.5rem; display:block; margin-bottom:12px;"></i>
+              <i class="far fa-coffee-bean" style="font-size:2.5rem; display:block; margin-bottom:12px;" aria-hidden="true"></i>
               Keranjang masih kosong.<br><small>Tambahkan kopi pilihanmu.</small>
             </div>`;
-            drawerTotal.textContent = "Rp 0";
+            drawerTotal.textContent = formatRupiah(0);
             updateBadges();
             return;
           }
@@ -974,21 +1138,21 @@
               <div class="item-detail">
                 <div class="item-name">${item.name}</div>
                 <div class="qty-row">
-                  <button class="qty-btn" data-index="${index}" data-delta="-1">−</button>
+                  <button class="qty-btn" data-index="${index}" data-delta="-1" aria-label="Kurangi jumlah ${item.name}">−</button>
                   <span class="qty-num">${item.qty}</span>
-                  <button class="qty-btn" data-index="${index}" data-delta="1">+</button>
+                  <button class="qty-btn" data-index="${index}" data-delta="1" aria-label="Tambah jumlah ${item.name}">+</button>
                 </div>
               </div>
-              <div class="item-subtotal">Rp ${subtotal.toLocaleString("id-ID")}</div>
-              <button class="btn-remove" data-index="${index}" title="Hapus">
-                <i class="fas fa-trash-alt"></i>
+              <div class="item-subtotal">${formatRupiah(subtotal)}</div>
+              <button class="btn-remove" data-index="${index}" title="Hapus ${item.name}" aria-label="Hapus ${item.name}">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
               </button>
             </div>
           `;
             })
             .join("");
 
-          drawerTotal.textContent = `Rp ${total.toLocaleString("id-ID")}`;
+          drawerTotal.textContent = formatRupiah(total);
           updateBadges();
 
           drawerBody.querySelectorAll(".qty-btn").forEach((btn) => {
@@ -1013,18 +1177,23 @@
             alert("💡 Silakan tambahkan minimal satu menu ke keranjang.");
             return;
           }
+
           const phoneNumber = "6281269441924";
           let message = "☕*Halo FYN Coffee!* %0A%0A";
           message += "Saya ingin memesan:%0A";
+
           cart.forEach((item) => {
             message += `➤ ${item.name} x${item.qty}%0A`;
           });
+
           const totalText = drawerTotal.textContent.replace("Rp ", "");
           message += `%0A💰 *Total: Rp ${totalText}*`;
+
           const note = noteInput.value.trim();
           if (note) {
             message += `%0A📝 *Catatan:* ${note}`;
           }
+
           message += "%0A%0A✨ Terima kasih! %0A_Segera diproses._";
           window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
         }
@@ -1036,17 +1205,23 @@
         overlay.addEventListener("click", closeDrawer);
         btnWhatsApp.addEventListener("click", sendWhatsApp);
         btnClearCart.addEventListener("click", clearCart);
+
         document.addEventListener("keydown", (e) => {
           if (e.key === "Escape" && cartDrawer.classList.contains("open")) {
             closeDrawer();
           }
         });
 
-        const savedNote = localStorage.getItem("fynNoteDrawer");
-        if (savedNote) noteInput.value = savedNote;
-        noteInput.addEventListener("input", () => {
-          localStorage.setItem("fynNoteDrawer", noteInput.value);
-        });
+        // Catatan dengan debounce
+        const savedNote = safeLocalStorage("fynNoteDrawer");
+        if (savedNote && typeof savedNote === "string")
+          noteInput.value = savedNote;
+
+        const saveNoteDebounced = debounce(() => {
+          safeLocalStorage("fynNoteDrawer", noteInput.value);
+        }, 300);
+
+        noteInput.addEventListener("input", saveNoteDebounced);
 
         // ========== INIT ==========
         renderMenu();
