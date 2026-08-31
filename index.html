@@ -3593,27 +3593,30 @@
       aria-atomic="false"
     ></div>
 
-    <!-- ====== MUSIC PLAYER — HTML5 AUDIO ====== -->
+    <!-- ====== MUSIC PLAYER ====== -->
+
     <div id="musicPlayer">
-      <button id="musicToggle" aria-label="Putar / jeda musik latar">
+      <button
+        id="musicToggle"
+        type="button"
+        aria-label="Putar / jeda musik latar"
+        aria-pressed="false"
+      >
         <i class="fas fa-headphones" id="musicIcon"></i>
       </button>
+
       <div id="musicNowPlaying">🎵 Lagu Santai • FYN</div>
     </div>
 
-    <!-- ====== AUDIO ELEMENT (tersembunyi) ====== -->
-    <audio id="bgMusic" loop preload="auto" volume="0.3">
-      <!-- Ganti src dengan file MP3 kamu. Letakkan di folder music/ -->
+    <!-- ====== AUDIO ELEMENT ====== -->
+
+    <audio id="bgMusic" loop preload="auto">
       <source
         src="Lagu Cafe, Lagu Santai, Lagu Indonesia Cover Terbaik Playlist 1 Chill Relaxing laguviral (1) (1).mp3"
         type="audio/mpeg"
       />
-      <!-- Fallback jika file tidak ditemukan -->
-      <source
-        src="Lagu Cafe, Lagu Santai, Lagu Indonesia Cover Terbaik Playlist 1 Chill Relaxing laguviral (1) (1).mp3"
-        type="audio/mpeg"
-      />
-      <p>Browser Anda tidak mendukung audio HTML5.</p>
+
+      Browser Anda tidak mendukung audio HTML5.
     </audio>
 
     <!-- ============================================================ -->
@@ -4289,6 +4292,15 @@
           init();
         }
       })();
+      /* =========================
+       ERROR CHECK
+    ========================= */
+
+      music.addEventListener("error", function () {
+        console.error("❌ File musik tidak ditemukan.");
+
+        musicNowPlaying.textContent = "⚠️ Musik tidak tersedia";
+      });
     </script>
   </body>
 </html>
